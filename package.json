@@ -1,0 +1,35 @@
+{
+  "name": "serverless-import-swagger",
+  "version": "0.0.1",
+  "description": "Import functions from swagger spec filet to serverless.yml",
+  "bin": {
+    "sis": "./bin/sis"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "commander": "^2.9.0",
+    "graceful-fs": "^4.1.10",
+    "js-yaml": "^3.6.1",
+    "string": "^3.3.3",
+    "swagger-parser": "^3.4.1",
+    "serverless": "^1.1.0",
+    "app-root-path": "^2.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AKIRA-MIYAKE/serverless-import-swagger.git"
+  },
+  "keywords": [],
+  "author": "AKIRA-MIYAKE",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AKIRA-MIYAKE/serverless-import-swagger/issues"
+  },
+  "homepage": "https://github.com/AKIRA-MIYAKE/serverless-import-swagger#readme"
+}
