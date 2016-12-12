@@ -1,20 +1,22 @@
 {
   "name": "serverless-import-swagger",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Import functions from swagger spec filet to serverless.yml",
   "bin": {
     "sis": "./bin/sis"
   },
   "dependencies": {
+    "app-root-path": "^2.0.1",
+    "change-case": "^3.0.0",
     "commander": "^2.9.0",
     "graceful-fs": "^4.1.10",
     "js-yaml": "^3.6.1",
-    "string": "^3.3.3",
-    "swagger-parser": "^3.4.1",
-    "serverless": "^1.1.0",
-    "app-root-path": "^2.0.1"
+    "serverless": "^1.3.0",
+    "swagger-parser": "^3.4.1"
   },
   "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
     "del": "^2.2.2",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2"
