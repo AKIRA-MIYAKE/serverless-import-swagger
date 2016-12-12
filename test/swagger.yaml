@@ -1,77 +1,159 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: Swagger Petstore
-  description: >
-    A sample API that uses a petstore as an example
-    to demonstrate features in the swagger-2.0 specification
+  title: Serverless Import Swagger
+  description: Test Swagger Spec
 consumes:
   - application/json
 produces:
   - application/json
 paths:
-  /pets:
-    get:
-      description: Returns all pets from the petstore
-      responses:
-        '200':
-          description: pet response
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/pet'
-        default:
-          description: unexpected error
-          schema:
-            $ref: '#/definitions/errorModel'
+  /authentication/signup:
     post:
-      description: Creates a new pet in the store
       parameters:
-        - name: pet
+        - name: params
           in: body
-          description: Pet to add to the store
           required: true
           schema:
-            $ref: '#/definitions/pet'
+            $ref: "#/definitions/AuthenticationSignupParams"
+      tags:
+        - Authentication
       responses:
-        '200':
-          description: pet response
+        200:
+          description: Register success
           schema:
-            $ref: '#/definitions/pet'
+            $ref: "#/definitions/AuthenticationSignupResponse"
         default:
-          description: unexpected error
+          description: Unexpected error
           schema:
-            $ref: '#/definitions/errorModel'
-  '/pets/{name}':
-    get:
-      description: Returns a single pet by name
+            $ref: "#/definitions/Error"
+
+  /authentication/confirm-signup:
+    post:
       parameters:
-        - name: name
-          in: path
-          description: Name of the pet to fetch
+        - name: params
+          in: body
           required: true
-          type: string
+          schema:
+            $ref: "#/definitions/AuthenticationConfirmSignupParams"
+      tags:
+        - Authentication
       responses:
-        '200':
-          description: pet response
+        200:
+          description: Confirm signup success
           schema:
-            $ref: '#/definitions/pet'
+            $ref: "#/definitions/AuthenticationConfirmSignupResponse"
         default:
-          description: unexpected error
+          description: Unexpected error
           schema:
-            $ref: '#/definitions/errorModel'
+            $ref: "#/definitions/Error"
+  /authentication/signin:
+    post:
+      parameters:
+        - name: params
+          in: body
+          required: true
+          schema:
+            $ref: "#/definitions/AuthenticationSigninParams"
+      tags:
+        - Authentication
+      responses:
+        200:
+          description: Signin success
+          schema:
+            $ref: "#/definitions/AuthenticationSigninResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /test:
+    get:
+      responses:
+        200:
+          description: Request Success
+          schema:
+            $ref: "#/definitions/TestResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+
 definitions:
-  pet:
+  AuthenticationSignupParams:
     type: object
     properties:
-      id:
+      email:
         type: string
-        description: id
-      name:
+      password:
         type: string
-        description: name
-  errorModel:
+        format: password
+  AuthenticationSignupResponseData:
+    type: object
+    properties:
+      username:
+        type: string
+  AuthenticationSignupResponse:
     type: object
     properties:
       code:
         type: integer
+      data:
+        $ref: "#/definitions/AuthenticationSignupResponseData"
+      message:
+        type: string
+
+  AuthenticationConfirmSignupParams:
+    type: object
+    properties:
+      username:
+        type: string
+      confirmationCode:
+        type: string
+  AuthenticationConfirmSignupResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+
+  AuthenticationSigninParams:
+    type: object
+    properties:
+      email:
+        type: string
+      passwprd:
+        type: string
+        format: password
+  AuthenticationSigninResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+
+  Test:
+    type: object
+    properties:
+      key:
+        type: string
+  TestResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: "#/definitions/Test"
+      message:
+        type: string
+
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string

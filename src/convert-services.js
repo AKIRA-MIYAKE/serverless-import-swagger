@@ -1,59 +1,88 @@
 'use strict';
 
-const Str = require('string');
+const changeCase = require('change-case');
 
 module.exports = (api) => {
-  const serviceConfigs = Object.keys(api.paths).map(path => {
-    const service = _extractServiceName(path);
-    const functions = {};
+  const services = _convertDefinitionArray(api.paths)
+  .map(definition => {
+    const service = _extractServiceName(definition);
+    const functionName = _extractFunctionName(definition);
+    const handler = `handler.${functionName}`;
 
-    Object.keys(api.paths[path]).forEach(method => {
-      const functionName = _extractFunctionName(path, method);
-      const handler = `handler.${functionName}`;
-
-      const httpEvent = {
-        http: {
-          path: path.slice(1),
-          method: method.toLowerCase(),
-          integration: 'lambda-proxy'
-        }
-      };
-
-      const events = [httpEvent];
-
-      functions[functionName] = {
-        handler,
-        events
+    const httpEvent = {
+      http: {
+        path: definition.path.slice(1),
+        method: definition.method.toLowerCase(),
+        integration: 'lambda-proxy'
       }
-    });
-
-    return {
-      service,
-      functions
     };
+
+    const events = [httpEvent];
+
+    const functions = {};
+    functions[functionName] = { handler, events };
+
+    return { service, functions };
   });
 
-  return _mergeServiceConfigs(serviceConfigs);
+  return _mergeServiceConfigs(services);
 };
 
-const _extractServiceName = (path) => {
-  return path
-  .split('/')
-  .filter(w => (w.length > 0))
-  .filter(w => !/^\{.*\}$/g.test(w))
-  .map(w => w.toLowerCase().replace(/[\W_]/g, '-'))
-  .join('-');
-}
+const _convertDefinitionArray = (paths) => {
+  const definitions = [];
 
-const _extractFunctionName = (path, method) => {
-  return [method].concat(
-    path
+  Object.keys(paths).forEach(path => {
+    Object.keys(paths[path]).forEach((method) => {
+      definitions.push({
+        path: path,
+        method: method,
+        methodObject: paths[path][method]
+      });
+    });
+  });
+
+  return definitions;
+};
+
+const _extractServiceName = (definition) => {
+  if (typeof definition.methodObject.tags === 'undefined') {
+    return definition.path
     .split('/')
     .filter(w => (w.length > 0))
-    .filter(w => /^\{.*\}$/.test(w))
-    .map(w => 'With' + Str(w.slice(1, -1)).titleCase().s.replace(/[\W_]/g, ''))
-  )
-  .join('');
+    .filter(w => !/^\{.*\}$/g.test(w))
+    .map(w => changeCase.snakeCase(w))
+    .join('-');
+  } else {
+    return changeCase.snakeCase(definition.methodObject.tags);
+  }
+};
+
+const _extractFunctionName = (definition) => {
+  if (typeof definition.methodObject.tags === 'undefined') {
+    return [definition.method].concat(
+      definition.path
+      .split('/')
+      .filter(w => (w.length > 0))
+      .filter(w => /^\{.*\}$/.test(w))
+      .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)))
+    )
+    .join('');
+  } else {
+    return [definition.method].concat(
+      definition.path
+      .split('/')
+      .filter(w => (w.length > 0))
+      .filter(w => !/^\{.*\}$/.test(w))
+      .filter(w => (changeCase.camelCase(w) != changeCase.camelCase(definition.methodObject.tags)))
+      .map(w => changeCase.pascalCase(w)),
+      definition.path
+      .split('/')
+      .filter(w => (w.length > 0))
+      .filter(w => /^\{.*\}$/.test(w))
+      .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)))
+    )
+    .join('');
+  }
 };
 
 const _mergeServiceConfigs = (configs) => {
