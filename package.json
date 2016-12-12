@@ -1,12 +1,9 @@
 {
   "name": "serverless-import-swagger",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Import functions from swagger spec filet to serverless.yml",
   "bin": {
     "sis": "./bin/sis"
-  },
-  "directories": {
-    "test": "test"
   },
   "dependencies": {
     "commander": "^2.9.0",
@@ -17,9 +14,15 @@
     "serverless": "^1.1.0",
     "app-root-path": "^2.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "del": "^2.2.2",
+    "mocha": "^3.2.0",
+    "power-assert": "^1.4.2"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src --out-dir lib",
+    "pretest": "npm run build",
+    "test": "mocha ./test/index.js"
   },
   "repository": {
     "type": "git",

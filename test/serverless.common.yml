@@ -1,0 +1,7 @@
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: testing
+  region: ap-northeast-1
+plugins:
+  - serverless-webpack
