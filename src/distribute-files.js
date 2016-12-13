@@ -10,7 +10,7 @@ module.exports = (config, outDir = '.') => {
   return Promise.resolve()
   .then(() => {
     return new Promise((resolve, reject) => {
-      fs.readdir(path.resolve(appRoot.path, outDir), 'utf-8', (error, results) => {
+      fs.readdir(path.resolve(appRoot.path, outDir), (error, results) => {
         results = (results) ? results : [];
         if (!results.some(r => (r === config.service))) {
           const command = `${appRoot.path}/node_modules/.bin/sls create -t aws-nodejs -p ${outDir}/${config.service}`;
@@ -38,6 +38,7 @@ module.exports = (config, outDir = '.') => {
       fs.writeFile(
         path.resolve(appRoot.path, outDir, `./${config.service}`, './serverless.yml'),
         jsyaml.safeDump(config),
+        'utf8',
         (error) => {
           if (error) {
             reject(error);
