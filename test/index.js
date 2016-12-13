@@ -17,11 +17,28 @@ describe('sis', () => {
       childProcess.execSync(command);
     });
 
-    it('Should generate service.', (done) => {
+    it('Should generate authentication service.', (done) => {
       fs.readdir(path.resolve(appRoot.path, './test/src/authentication'), (error, results) => {
-        assert.ok(results.length === 3);
         assert.ok(results.some((result) => {
           return (result === 'serverless.yml');
+        }));
+
+        assert.ok(results.some((result) => {
+          return (result === 'handler.js');
+        }));
+
+        done();
+      });
+    });
+
+    it('Should generate test service.', (done) => {
+      fs.readdir(path.resolve(appRoot.path, './test/src/test'), (error, results) => {
+        assert.ok(results.some((result) => {
+          return (result === 'serverless.yml');
+        }));
+
+        assert.ok(results.some((result) => {
+          return (result === 'handler.js');
         }));
 
         done();
