@@ -32,7 +32,7 @@ describe('sis', () => {
     });
 
     it('Should generate test service.', (done) => {
-      fs.readdir(path.resolve(appRoot.path, './test/src/test'), (error, results) => {
+      fs.readdir(path.resolve(appRoot.path, './test/src/test-service'), (error, results) => {
         assert.ok(results.some((result) => {
           return (result === 'serverless.yml');
         }));

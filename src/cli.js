@@ -17,11 +17,12 @@ module.exports.exec = () => {
   .option('-i, --input <path>', 'specify swagger file path')
   .option('-c, --common <path>', 'specify common config of serverless file path')
   .option('-o, --outDir <path>', 'specify dist directory of service')
+  .option('-p, --prefix <prefix>', 'specify target prefix (default "sls")')
   .parse(process.argv);
 
   Promise.resolve()
   .then(() => loadSwagger(commander.input))
-  .then(api => convertServices(api))
+  .then(api => convertServices(api, commander.prefix))
   .then(configs => {
     return Promise.all(
       configs.map(config => createService(config, commander.outDir))
