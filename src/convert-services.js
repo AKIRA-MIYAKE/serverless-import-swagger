@@ -2,10 +2,11 @@
 
 const changeCase = require('change-case');
 
-module.exports = (api) => {
+module.exports = (api, prefix = 'sls') => {
   const services = _convertDefinitionArray(api.paths)
+  .filter(definition => _isTarget(definition, prefix))
   .map(definition => {
-    const service = _extractServiceName(definition);
+    const service = _extractServiceName(definition, prefix);
     const functionName = _extractFunctionName(definition);
     const handler = `handler.${functionName}`;
 
@@ -44,45 +45,39 @@ const _convertDefinitionArray = (paths) => {
   return definitions;
 };
 
-const _extractServiceName = (definition) => {
+const _isTarget = (definition, prefix) => {
   if (typeof definition.methodObject.tags === 'undefined') {
-    return definition.path
-    .split('/')
-    .filter(w => (w.length > 0))
-    .filter(w => !/^\{.*\}$/g.test(w))
-    .map(w => changeCase.snakeCase(w))
-    .join('-');
-  } else {
-    return changeCase.snakeCase(definition.methodObject.tags);
+    return false;
   }
+
+  return definition.methodObject.tags.some(tag => {
+    return (tag.indexOf(prefix) === 0);
+  });
+}
+
+const _extractServiceName = (definition, prefix) => {
+  const extracted = definition.methodObject.tags.filter(tag => {
+    return (tag.indexOf(prefix) === 0);
+  })[0];
+
+  return changeCase.paramCase(extracted.slice(prefix.length + 1));
 };
 
 const _extractFunctionName = (definition) => {
-  if (typeof definition.methodObject.tags === 'undefined') {
-    return [definition.method].concat(
-      definition.path
-      .split('/')
-      .filter(w => (w.length > 0))
-      .filter(w => /^\{.*\}$/.test(w))
-      .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)))
-    )
-    .join('');
-  } else {
-    return [definition.method].concat(
-      definition.path
-      .split('/')
-      .filter(w => (w.length > 0))
-      .filter(w => !/^\{.*\}$/.test(w))
-      .filter(w => (changeCase.camelCase(w) != changeCase.camelCase(definition.methodObject.tags)))
-      .map(w => changeCase.pascalCase(w)),
-      definition.path
-      .split('/')
-      .filter(w => (w.length > 0))
-      .filter(w => /^\{.*\}$/.test(w))
-      .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)))
-    )
-    .join('');
-  }
+  return [definition.method].concat(
+    definition.path
+    .split('/')
+    .filter(w => (w.length > 0))
+    .filter(w => !/^\{.*\}$/.test(w))
+    .filter(w => (changeCase.camelCase(w) != changeCase.camelCase(definition.methodObject.tags)))
+    .map(w => changeCase.pascalCase(w)),
+    definition.path
+    .split('/')
+    .filter(w => (w.length > 0))
+    .filter(w => /^\{.*\}$/.test(w))
+    .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)))
+  )
+  .join('');
 };
 
 const _mergeServiceConfigs = (configs) => {

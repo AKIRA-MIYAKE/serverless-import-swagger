@@ -17,7 +17,7 @@ paths:
           schema:
             $ref: "#/definitions/AuthenticationSignupParams"
       tags:
-        - Authentication
+        - sls-authentication
       responses:
         200:
           description: Register success
@@ -37,7 +37,7 @@ paths:
           schema:
             $ref: "#/definitions/AuthenticationConfirmSignupParams"
       tags:
-        - Authentication
+        - sls-authentication
       responses:
         200:
           description: Confirm signup success
@@ -56,7 +56,7 @@ paths:
           schema:
             $ref: "#/definitions/AuthenticationSigninParams"
       tags:
-        - Authentication
+        - sls-authentication
       responses:
         200:
           description: Signin success
@@ -69,6 +69,8 @@ paths:
 
   /test:
     get:
+      tags:
+        - sls-test-service
       responses:
         200:
           description: Request Success

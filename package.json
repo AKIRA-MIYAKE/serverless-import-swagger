@@ -1,6 +1,6 @@
 {
   "name": "serverless-import-swagger",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Import functions from swagger spec filet to serverless.yml",
   "bin": {
     "sis": "./bin/sis"
@@ -24,7 +24,7 @@
   "scripts": {
     "build": "babel src --out-dir lib",
     "pretest": "npm run build",
-    "test": "mocha ./test/index.js"
+    "test": "mocha --timeout 5000 ./test/index.js"
   },
   "repository": {
     "type": "git",
