@@ -3,60 +3,49 @@
 const commander = require('commander');
 
 const loadSwagger = require('./load-swagger');
-const loadCommonConfig = require('./load-common-config');
+const convertSwaggerToConfigs = require('./convert-swagger-to-configs');
+const generateServiceIfNeed = require('./generate-service-if-need');
 const loadExistsConfig = require('./load-exists-config');
-const convertServices = require('./convert-services');
-const mergeConfig = require('./merge-config');
-const createService = require('./create-service');
-const distributeFiles = require('./distribute-files');
+const loadCommonConfig = require('./load-common-config');
+const mergeConfigs = require('./merge-configs');
+const wrilteFile = require('./write-file');
 
 module.exports.exec = () => {
   commander
   .version('0.0.2')
   .description('Import functions from swagger spec filet to serverless.yml')
-  .option('-i, --input <path>', 'specify swagger file path')
-  .option('-c, --common <path>', 'specify common config of serverless file path')
-  .option('-o, --outDir <path>', 'specify dist directory of service')
-  .option('-p, --prefix <prefix>', 'specify target prefix (default "sls")')
+  .option('-i, --input <path>', 'Specify swagger file path. (defailt "./swagger.ya?ml")')
+  .option('-c, --common <path>', 'Specify common config of serverless file path. (default "./serverless.common.ya?ml")')
+  .option('-o, --out-dir <path>', 'Specify dist directory of services. (default "./")')
+  .option('-A, --api-prefix <prefix>', 'Specify target prefix for swagger tags. (default "sls")')
+  .option('-S, --service-prefix <prefix>', 'Specify prefix that added service name. (default none)')
+  .option('-f, --force', 'If add this option, overwriten serverless.yml by generated definitinos.')
   .parse(process.argv);
 
+  const options = {
+    input: (commander.input) ? commander.input : 'swagger.yaml',
+    common: (commander.common) ? commander.common : './serverless.common.yml',
+    outDir: (commander.outDir) ? commander.outDir : './',
+    apiPrefix: (commander.apiPrefix) ? commander.apiPrefix : 'sls',
+    servicePrefix: (commander.servicePrefix) ? commander.servicePrefix : undefined,
+    force: (commander.force) ? commander.force : false
+  };
+
   Promise.resolve()
-  .then(() => loadSwagger(commander.input))
-  .then(api => convertServices(api, commander.prefix))
-  .then(configs => {
-    return Promise.all(
-      configs.map(config => createService(config, commander.outDir))
-    )
-    .then(() => configs)
-  })
-  .then(services => {
-    return loadCommonConfig(commander.common)
-    .then(common => {
-      return Promise.all(
-        services.map(service => Promise.resolve([service, common]))
+  .then(() => loadSwagger(options))
+  .then(swagger => convertSwaggerToConfigs(swagger, options))
+  .then(convertedConfigs => loadCommonConfig(options)
+    .then(common => Promise.all(
+      convertedConfigs
+      .map(converted => Promise.resolve()
+        .then(() => generateServiceIfNeed(converted, options))
+        .then(converted => loadExistsConfig(converted, options))
+        .then(([converted, exists]) => [converted, exists, common])
+        .then(configs => mergeConfigs(...configs, options))
+        .then(config => wrilteFile(config, options))
       )
-    });
-  })
-  .then(configs => {
-    return Promise.all(
-      configs.map(([service, common]) => {
-        return loadExistsConfig(service.service, commander.outDir)
-        .then(exists => [service, common, exists]);
-      })
-    );
-  })
-  .then(configs => {
-    return Promise.all(
-      configs.map(config => mergeConfig(...config))
-    );
-  })
-  .then(configs => {
-    return Promise.all(
-      configs.map(config => distributeFiles(config, commander.outDir))
-    );
-  })
-  .then(() => {
-    console.log('Swagger import complete.');
-  })
-  .catch(e => { console.log(e); });
+    ))
+  )
+  .then(() => console.log('Import success.'))
+  .catch(error => console.log(error));
 };

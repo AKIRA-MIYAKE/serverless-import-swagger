@@ -9,21 +9,28 @@ $ npm install serverless-import-swagger
 
 # Add tag to Operation Object in swagger.yaml
 Add `sls-{service-name}` tag to the operation that targeted by serverless.  
-Default prefix is "sls". If you want to use other prefix, call sls command with `-p` option.  
+Default prefix is "sls". If you want to use other prefix, call sls command with `-A` option.  
 
 # Usage
 Set `swagger.yaml` file on applicaion root directory.  
 If you want to apply common configs to serverless.yml, set `serverless.common.yml` file on application root directory.   
 
 ```
-$ sis [options]  
-```
+Usage: sis [options]
 
-Options:  
-  -i, --input <path>   specify swagger file path  
-  -c, --common <path>  specify common config of serverless file path  
-  -o, --outDir <path>  specify dist directory of service  
-  -p, --prefix <prefix>   specify target prefix (default "sls")
+  Import functions from swagger spec filet to serverless.yml
+
+  Options:
+
+    -h, --help                     output usage information
+    -V, --version                  output the version number
+    -i, --input <path>             Specify swagger file path. (defailt "./swagger.ya?ml")
+    -c, --common <path>            Specify common config of serverless file path. (default "./serverless.common.ya?ml")
+    -o, --out-dir <path>           Specify dist directory of services. (default "./")
+    -A, --api-prefix <prefix>      Specify target prefix for swagger tags. (default "sls")
+    -S, --service-prefix <prefix>  Specify prefix that added service name. (default none)
+    -f, --force                    If add this option, overwriten serverless.yml by generated definitinos.
+```
 
 Example
 ```
