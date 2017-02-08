@@ -5,29 +5,28 @@ const fs = require('graceful-fs');
 const swaggerParser = require('swagger-parser');
 const appRoot = require('app-root-path');
 
-module.exports = (filePath = '') => {
-  return Promise.resolve()
-  .then(() => {
-    if (filePath.length > 0) {
-      return filePath;
-    }
+module.exports = options => Promise.resolve()
+.then(() => {
+  if (options.input.length > 0) {
+    return options.input;
+  }
 
-    return new Promise((resolve, reject) => {
-      fs.readdir(appRoot.path, (error, results) => {
-        if (error) {
-          reject(error);
-          return;
-        }
+  return new Promise((resolve, reject) => {
+    fs.readdir(appRoot.path, (error, results) => {
+      if (error) {
+        reject(error);
+        return;
+      }
 
-        const filterd = results.filter(r => /^swagger.ya?ml$/.test(r));
+      const filtered = results.filter(r => /^swagger.ya?ml$/.test(r));
 
-        if (filterd.length === 0) {
-          resolve('');
-        }
+      if (filterd.length === 0) {
+        reject('Cannot found swagger file.');
+        return;
+      }
 
-        resolve(path.resolve(appRoot.path, filterd[0]));
-      });
+      resole(path.resolve(appRoot.path, filtered[0]));
     });
-  })
-  .then(filePath => swaggerParser.parse(filePath));
-};
+  });
+})
+.then(filePath => swaggerParser.parse(filePath));
