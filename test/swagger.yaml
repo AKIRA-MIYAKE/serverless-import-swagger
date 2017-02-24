@@ -70,7 +70,7 @@ paths:
   /test:
     get:
       tags:
-        - sls-test-service
+        - sls-test
       responses:
         200:
           description: Request Success
