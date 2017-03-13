@@ -34,11 +34,20 @@ const isTarget = (definition, options) => {
 
 const definitionToConfig = (definition, options) => {
   const service = extractServiceName(definition, options);
-  const functionName = extractFunctionName(definition);
+  const functionName = extractFunctionName(definition, options);
   const handler = `handler.${functionName}`;
+
+  let path;
+  if (options.basePath) {
+    const splited = definition.path.slice(1).split('/');
+    path = (splited.length === 1) ? '/' : `/${splited.slice(1).join('/')}`;
+  } else {
+    path = definition.path;
+  }
+
   const httpEvent = {
     http: {
-      path: definition.path.slice(1),
+      path: path,
       method: definition.method.toLowerCase(),
       integration: 'lambda-proxy'
     }
@@ -59,20 +68,23 @@ const extractServiceName = (definition, options) => {
 };
 
 const extractFunctionName = definition => {
-  return [definition.method].concat(
-    definition.path
-    .split('/')
-    .filter(w => (w.length > 0))
-    .filter(w => !/^\{.*\}$/.test(w))
-    .filter(w => (changeCase.camelCase(w) != changeCase.camelCase(definition.methodObject.tags)))
-    .map(w => changeCase.pascalCase(w)),
-    definition.path
-    .split('/')
-    .filter(w => (w.length > 0))
-    .filter(w => /^\{.*\}$/.test(w))
-    .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)))
-  )
-  .join('');
+  const method = [definition.method];
+
+  const resource = definition.path
+  .split('/')
+  .reverse()
+  .filter(w => (w.length > 0))
+  .filter(w => !/^\{.*\}$/.test(w))
+  .filter((_, index) => (index === 0))
+  .map(w => changeCase.pascalCase(w));
+
+  const conditions = definition.path
+  .split('/')
+  .filter(w => (w.length > 0))
+  .filter(w => /^\{.*\}$/.test(w))
+  .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)));
+
+  return method.concat(resource, conditions).join('');
 };
 
 const mergeConfigs = configs => {

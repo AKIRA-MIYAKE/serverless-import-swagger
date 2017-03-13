@@ -1,5 +1,5 @@
 # serverless-import-swagger
-Import functions from swagger spec filet to serverless.yml
+Import functions from swagger spec filet to serverless.yml of [Serverless Framework](https://serverless.com/)  
 
 # Install
 
@@ -29,6 +29,7 @@ Usage: sis [options]
     -o, --out-dir <path>           Specify dist directory of services. (default "./")
     -A, --api-prefix <prefix>      Specify target prefix for swagger tags. (default "sls")
     -S, --service-prefix <prefix>  Specify prefix that added service name. (default none)
+    -B, --base-path                If add this option, run in a mode of dividing a service by a api base path.
     -f, --force                    If add this option, overwriten serverless.yml by generated definitinos.
 ```
 
@@ -36,3 +37,11 @@ Example
 ```
 $ sis -i /path/to/swagger.yml -c /path/to/serverless.common.yml -o ./src
 ```
+
+# Caution
+Serverless depends on constraints of amazon web service.  
+For example...
+
++ The maximum number of CloudFormation resources is 200. Therefore, APIs that contain many paths need to be divided using `--base-path` mode.
++ The function name of AWS Lambda must be 64 characters or less. For that reason, if long function names are generated, they can not be deployed.
++ API Gateway requires that path parameters in the same hierarchy be unique. Serverless also suffers from similar restrictions.
