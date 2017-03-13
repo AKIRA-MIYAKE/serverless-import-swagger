@@ -12,7 +12,7 @@ const wrilteFile = require('./write-file');
 
 module.exports.exec = () => {
   commander
-  .version('0.0.2')
+  .version('0.0.9')
   .description('Import functions from swagger spec filet to serverless.yml')
   .option('-i, --input <path>', 'Specify swagger file path. (defailt "./swagger.ya?ml")')
   .option('-c, --common <path>', 'Specify common config of serverless file path. (default "./serverless.common.ya?ml")')

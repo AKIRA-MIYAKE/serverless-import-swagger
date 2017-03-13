@@ -80,6 +80,64 @@ paths:
           description: Unexpected error
           schema:
             $ref: "#/definitions/Error"
+  /test/{id}:
+    get:
+      tags:
+        - sls-test
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Request Success
+          schema:
+            $ref: "#/definitions/TestResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+  /test/{testId}/comments:
+    get:
+      tags:
+        - sls-test
+      parameters:
+        - name: testId
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Request Success
+          schema:
+            $ref: "#/definitions/TestResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+  /test/{testId}/users/{userId}/comments:
+    get:
+      tags:
+        - sls-test
+      parameters:
+        - name: testId
+          in: path
+          required: true
+          type: string
+        - name: userId
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Request Success
+          schema:
+            $ref: "#/definitions/TestResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
 
 
 definitions:
