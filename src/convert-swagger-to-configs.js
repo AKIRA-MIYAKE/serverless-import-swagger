@@ -36,9 +36,18 @@ const definitionToConfig = (definition, options) => {
   const service = extractServiceName(definition, options);
   const functionName = extractFunctionName(definition);
   const handler = `handler.${functionName}`;
+
+  let path;
+  if (options.basePath) {
+    const splited = definition.path.slice(1).split('/');
+    path = (splited.length === 1) ? '/' : `/${splited.slice(1).join('/')}`;
+  } else {
+    path = definition.path;
+  }
+
   const httpEvent = {
     http: {
-      path: definition.path.slice(1),
+      path: path,
       method: definition.method.toLowerCase(),
       integration: 'lambda-proxy'
     }

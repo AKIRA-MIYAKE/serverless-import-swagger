@@ -19,6 +19,7 @@ module.exports.exec = () => {
   .option('-o, --out-dir <path>', 'Specify dist directory of services. (default "./")')
   .option('-A, --api-prefix <prefix>', 'Specify target prefix for swagger tags. (default "sls")')
   .option('-S, --service-prefix <prefix>', 'Specify prefix that added service name. (default none)')
+  .option('-B, --base-path', 'If add this option, run in a mode of dividing a service by a api base path.')
   .option('-f, --force', 'If add this option, overwriten serverless.yml by generated definitinos.')
   .parse(process.argv);
 
@@ -28,6 +29,7 @@ module.exports.exec = () => {
     outDir: (commander.outDir) ? commander.outDir : './',
     apiPrefix: (commander.apiPrefix) ? commander.apiPrefix : 'sls',
     servicePrefix: (commander.servicePrefix) ? commander.servicePrefix : undefined,
+    basePath: (commander.basePath) ? commander.basePath : false,
     force: (commander.force) ? commander.force : false
   };
 
