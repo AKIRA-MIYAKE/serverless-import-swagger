@@ -67,24 +67,37 @@ const extractServiceName = (definition, options) => {
   return (options.servicePrefix) ? `${options.servicePrefix}-${caseChanged}` : caseChanged;
 };
 
-const extractFunctionName = definition => {
+const extractFunctionName = (definition, options) => {
   const method = [definition.method];
 
-  const resource = definition.path
+  const resources = definition.path
   .split('/')
-  .reverse()
   .filter(w => (w.length > 0))
+  .filter((w, i) => ((options.basePath) ? i !== 0 : true))
+  .reduce((acc, current, index, arr) => {
+    if (/^\{.*\}$/.test(current)) {
+      return acc;
+    } else {
+      if (/^\{.*\}$/.test(arr[index -1])) {
+        return [current];
+      } else {
+        return acc.concat(current);
+      }
+    }
+  }, [])
   .filter(w => !/^\{.*\}$/.test(w))
-  .filter((_, index) => (index === 0))
   .map(w => changeCase.pascalCase(w));
 
   const conditions = definition.path
   .split('/')
   .filter(w => (w.length > 0))
   .filter(w => /^\{.*\}$/.test(w))
-  .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)));
+  .map((w, i) => {
+    const n = changeCase.pascalCase(w.split(1, -1));
+    return (i === 0) ? `With${n}` : `And${n}`;
+  });
 
-  return method.concat(resource, conditions).join('');
+  return method.concat(resources, conditions).join('');
 };
 
 const mergeConfigs = configs => {

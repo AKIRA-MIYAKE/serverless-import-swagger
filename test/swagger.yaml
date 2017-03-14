@@ -47,7 +47,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: "#/definitions/Error"
-  /authentication/signin:
+  /authentication/signin/email:
     post:
       parameters:
         - name: params
@@ -98,7 +98,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: "#/definitions/Error"
-  /test/{testId}/comments:
+  /test/{testId}/comments/users:
     get:
       tags:
         - sls-test
@@ -126,6 +126,54 @@ paths:
           required: true
           type: string
         - name: userId
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Request Success
+          schema:
+            $ref: "#/definitions/TestResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+  /test/{testId}/users/{userId}/comments/{commentId}:
+    get:
+      tags:
+        - sls-test
+      parameters:
+        - name: testId
+          in: path
+          required: true
+          type: string
+        - name: userId
+          in: path
+          required: true
+          type: string
+        - name: commentId
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Request Success
+          schema:
+            $ref: "#/definitions/TestResponse"
+        default:
+          description: Unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+  /user/testings/{testingId}/categories/{categorieId}/comments:
+    get:
+      tags:
+        - sls-test
+      parameters:
+        - name: testingId
+          in: path
+          required: true
+          type: string
+        - name: categorieId
           in: path
           required: true
           type: string
