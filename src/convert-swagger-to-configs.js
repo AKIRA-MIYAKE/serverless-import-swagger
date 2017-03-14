@@ -67,24 +67,32 @@ const extractServiceName = (definition, options) => {
   return (options.servicePrefix) ? `${options.servicePrefix}-${caseChanged}` : caseChanged;
 };
 
-const extractFunctionName = definition => {
+const extractFunctionName = (definition, options) => {
   const method = [definition.method];
 
-  const resource = definition.path
+  const resources = definition.path
   .split('/')
-  .reverse()
   .filter(w => (w.length > 0))
   .filter(w => !/^\{.*\}$/.test(w))
-  .filter((_, index) => (index === 0))
   .map(w => changeCase.pascalCase(w));
 
   const conditions = definition.path
   .split('/')
   .filter(w => (w.length > 0))
   .filter(w => /^\{.*\}$/.test(w))
-  .map(w => 'With' + changeCase.pascalCase(w.split(1, -1)));
+  .map((w, i) => {
+    const n = changeCase.pascalCase(w.split(1, -1));
+    return (i === 0) ? `With${n}` : `And${n}`;
+  });
 
-  return method.concat(resource, conditions).join('');
+  if (resources.length - conditions.length > 1) {
+    return method.concat(
+      resources.filter((w, i) => ((options.basePath) ? i !== 0 : true)),
+      conditions
+    ).join('');
+  } else {
+    return method.concat(resources.reverse().filter((w, i) => (i === 0)), conditions).join('');
+  }
 };
 
 const mergeConfigs = configs => {

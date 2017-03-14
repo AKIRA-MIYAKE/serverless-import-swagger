@@ -47,7 +47,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: "#/definitions/Error"
-  /authentication/signin:
+  /authentication/signin/email:
     post:
       parameters:
         - name: params
@@ -98,7 +98,7 @@ paths:
           description: Unexpected error
           schema:
             $ref: "#/definitions/Error"
-  /test/{testId}/comments:
+  /test/{testId}/comments/users:
     get:
       tags:
         - sls-test
