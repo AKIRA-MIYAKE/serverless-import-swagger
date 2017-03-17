@@ -53,6 +53,10 @@ const definitionToConfig = (definition, options) => {
     }
   };
 
+  if (options.cors) {
+    httpEvent.http['cors'] = true;
+  }
+
   const events = [httpEvent];
   const functions = {};
   functions[functionName] = { handler, events };
