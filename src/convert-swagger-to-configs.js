@@ -3,12 +3,12 @@
 const changeCase = require('change-case');
 
 module.exports = (swagger, options) => mergeConfigs(
-  swaggerToDefinitions(swagger)
+  swaggerToDefinitions(swagger, options)
   .filter(definition => isTarget(definition, options))
   .map(definition => definitionToConfig(definition, options))
 );
 
-const swaggerToDefinitions = swagger => {
+const swaggerToDefinitions = (swagger, options) => {
   const definitions = [];
 
   Object.keys(swagger.paths).forEach(path => {
@@ -18,6 +18,14 @@ const swaggerToDefinitions = swagger => {
         method: method,
         methodObject: swagger.paths[path][method]
       });
+
+      if (options.optionsMethod) {
+        definitions.push({
+          path: path,
+          method: 'options',
+          methodObject: swagger.paths[path][method]
+        });
+      }
     });
   });
 
@@ -53,7 +61,7 @@ const definitionToConfig = (definition, options) => {
     }
   };
 
-  if (options.cors) {
+  if (options.cors && !options.options) {
     httpEvent.http['cors'] = true;
   }
 

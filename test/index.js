@@ -13,7 +13,7 @@ describe('sis', () => {
 
   describe('interface testing', () => {
     before(() => {
-      const command = `${appRoot.path}/bin/sis -i test/swagger.yaml -c test/serverless.common.yml -S sis -C -o test/src`;
+      const command = `${appRoot.path}/bin/sis -i test/swagger.yaml -c test/serverless.common.yml -S sis -O -f -o test/src`;
       childProcess.execSync(command);
     });
 
