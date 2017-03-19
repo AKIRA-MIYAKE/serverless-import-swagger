@@ -12,7 +12,7 @@ const wrilteFile = require('./write-file');
 
 module.exports.exec = () => {
   commander
-  .version('0.0.11')
+  .version('0.0.13')
   .description('Import functions from swagger spec filet to serverless.yml')
   .option('-i, --input <path>', 'Specify swagger file path. (defailt "./swagger.ya?ml")')
   .option('-c, --common <path>', 'Specify common config of serverless file path. (default "./serverless.common.ya?ml")')
@@ -21,6 +21,8 @@ module.exports.exec = () => {
   .option('-S, --service-prefix <prefix>', 'Specify prefix that added service name. (default none)')
   .option('-B, --base-path', 'If add this option, run in a mode of dividing a service by a api base path.')
   .option('-f, --force', 'If add this option, overwriten serverless.yml by generated definitinos.')
+  .option('-C, --cors', 'If add this option, added cors setting to all event.')
+  .option('-O, --options-method', 'If add this option, added OPTIONS method for all api path.')
   .parse(process.argv);
 
   const options = {
@@ -30,7 +32,9 @@ module.exports.exec = () => {
     apiPrefix: (commander.apiPrefix) ? commander.apiPrefix : 'sls',
     servicePrefix: (commander.servicePrefix) ? commander.servicePrefix : undefined,
     basePath: (commander.basePath) ? commander.basePath : false,
-    force: (commander.force) ? commander.force : false
+    force: (commander.force) ? commander.force : false,
+    cors: (commander.cors) ? commander.cors : false,
+    optionsMethod: (commander.optionsMethod) ? commander.optionsMethod : false
   };
 
   Promise.resolve()
