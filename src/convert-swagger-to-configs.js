@@ -105,8 +105,11 @@ const extractFunctionName = (definition, options) => {
   .filter(w => (w.length > 0))
   .filter(w => /^\{.*\}$/.test(w))
   .map((w, i) => {
-    const n = changeCase.pascalCase(w.split(1, -1));
-    return (i === 0) ? `With${n}` : `And${n}`;
+    const n = changeCase.dotCase(w.slice(1, -1))
+    .split('.')
+    .map(s => changeCase.pascalCase(s.slice(0, 3)))
+    .join('');
+    return (i === 0) ? `With${n}` : n;
   });
 
   return method.concat(resources, conditions).join('');

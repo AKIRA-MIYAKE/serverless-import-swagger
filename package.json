@@ -1,6 +1,6 @@
 {
   "name": "serverless-import-swagger",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Import functions from swagger spec filet to serverless.yml",
   "bin": {
     "sis": "./bin/sis"
