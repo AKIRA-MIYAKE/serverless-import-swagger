@@ -15,18 +15,21 @@ const swaggerToDefinitions = (swagger, options) => {
     Object.keys(swagger.paths[path]).forEach(method => {
       definitions.push({
         path: path,
-        method: method,
+        method: method.toLowerCase(),
         methodObject: swagger.paths[path][method]
       });
+    });
 
-      if (options.optionsMethod) {
+    if (options.optionsMethod) {
+      const filtered = Object.keys(swagger.paths[path]).filter(method => (method.toLowerCase() !== 'get'));
+      if (filtered.length > 0) {
         definitions.push({
           path: path,
           method: 'options',
-          methodObject: swagger.paths[path][method]
+          methodObject: swagger.paths[path][filtered[0]]
         });
       }
-    });
+    }
   });
 
   return definitions;
@@ -56,12 +59,12 @@ const definitionToConfig = (definition, options) => {
   const httpEvent = {
     http: {
       path: path,
-      method: definition.method.toLowerCase(),
+      method: definition.method,
       integration: 'lambda-proxy'
     }
   };
 
-  if (options.cors && !options.options) {
+  if (options.cors || (options.optionsMethod && (definition.method === 'get'))) {
     httpEvent.http['cors'] = true;
   }
 
