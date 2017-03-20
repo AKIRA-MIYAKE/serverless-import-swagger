@@ -13,7 +13,7 @@ describe('sis', () => {
 
   describe('interface testing', () => {
     before(() => {
-      const command = `${appRoot.path}/bin/sis -i test/swagger.yaml -c test/serverless.common.yml -S sis -B -O -f -o test/src`;
+      const command = `${appRoot.path}/bin/sis -i test/swagger.yaml -c test/serverless.common.yml -S sis -o test/src -f -O -B`;
       childProcess.execSync(command);
     });
 
@@ -46,7 +46,7 @@ describe('sis', () => {
     });
 
     after(() => {
-      return del(path.resolve(appRoot.path, './test/src'));
+      // return del(path.resolve(appRoot.path, './test/src'));
     });
   });
 

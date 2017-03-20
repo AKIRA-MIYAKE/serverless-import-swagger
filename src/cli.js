@@ -12,17 +12,21 @@ const wrilteFile = require('./write-file');
 
 module.exports.exec = () => {
   commander
-  .version('0.0.14')
+  .version('0.0.15')
   .description('Import functions from swagger spec filet to serverless.yml')
+  // Common options.
   .option('-i, --input <path>', 'Specify swagger file path. (defailt "./swagger.ya?ml")')
   .option('-c, --common <path>', 'Specify common config of serverless file path. (default "./serverless.common.ya?ml")')
   .option('-o, --out-dir <path>', 'Specify dist directory of services. (default "./")')
+  .option('-f, --force', 'If add this option, overwriten serverless.yml by generated definitinos.')
+  // Services and tags prefix options.
   .option('-A, --api-prefix <prefix>', 'Specify target prefix for swagger tags. (default "sls")')
   .option('-S, --service-prefix <prefix>', 'Specify prefix that added service name. (default none)')
+  // Base path mode settings.
   .option('-B, --base-path', 'If add this option, run in a mode of dividing a service by a api base path.')
-  .option('-f, --force', 'If add this option, overwriten serverless.yml by generated definitinos.')
-  .option('-C, --cors', 'If add this option, added cors setting to all event.')
-  .option('-O, --options-method', 'If add this option, added OPTIONS method for all api path.')
+  // CORS and options settings.
+  .option('-C, --cors', 'If add this option, added cors setting to all http event.')
+  .option('-O, --options-method', 'If add this option, added cors setting to get http event, and added OPTIONS method to api path that including other http method.')
   .parse(process.argv);
 
   const options = {
@@ -34,7 +38,7 @@ module.exports.exec = () => {
     basePath: (commander.basePath) ? commander.basePath : false,
     force: (commander.force) ? commander.force : false,
     cors: (commander.cors) ? commander.cors : false,
-    optionsMethod: (commander.optionsMethod) ? commander.optionsMethod : false
+    optionsMethod: (commander.optionsMethod) ? commander.optionsMethod : false,
   };
 
   Promise.resolve()
