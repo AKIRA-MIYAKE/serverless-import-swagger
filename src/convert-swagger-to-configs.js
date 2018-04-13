@@ -11,22 +11,24 @@ module.exports = (swagger, options) => mergeConfigs(
 const swaggerToDefinitions = (swagger, options) => {
   const definitions = [];
 
-  Object.keys(swagger.paths).forEach(path => {
-    Object.keys(swagger.paths[path]).forEach(method => {
+  swagger.paths.getItems().forEach(pathItem => {
+    const path = pathItem.path();
+    const methodNames = Object.keys(pathItem).filter(k => !k.startsWith("_"));
+    methodNames.forEach(method => {
       definitions.push({
         path: path,
         method: method.toLowerCase(),
-        methodObject: swagger.paths[path][method]
+        methodObject: pathItem[method]
       });
     });
 
     if (options.optionsMethod) {
-      const filtered = Object.keys(swagger.paths[path]).filter(method => (method.toLowerCase() !== 'get'));
+      const filtered = methodNames.filter(method => (method.toLowerCase() !== 'get'));
       if (filtered.length > 0) {
         definitions.push({
           path: path,
           method: 'options',
-          methodObject: swagger.paths[path][filtered[0]]
+          methodObject: pathItem[filtered[0]]
         });
       }
     }

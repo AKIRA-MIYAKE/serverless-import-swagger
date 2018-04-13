@@ -13,7 +13,7 @@
     "graceful-fs": "^4.1.10",
     "js-yaml": "^3.6.1",
     "serverless": "^1.9.0",
-    "swagger-parser": "^3.4.1"
+    "oai-ts-core": "^0.2.13"
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
