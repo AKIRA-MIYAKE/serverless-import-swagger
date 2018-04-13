@@ -46,7 +46,7 @@ describe('sis', () => {
     });
 
     after(() => {
-      // return del(path.resolve(appRoot.path, './test/src'));
+      return del(path.resolve(appRoot.path, './test/src'));
     });
   });
 
