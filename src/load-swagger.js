@@ -2,8 +2,11 @@
 
 const path = require('path');
 const fs = require('graceful-fs');
-const swaggerParser = require('swagger-parser');
+const yaml = require('js-yaml');
+const openapiParser = require('oai-ts-core');
 const appRoot = require('app-root-path');
+
+const parser = new openapiParser.OasLibraryUtils();
 
 module.exports = options => Promise.resolve()
 .then(() => {
@@ -25,8 +28,11 @@ module.exports = options => Promise.resolve()
         return;
       }
 
-      resole(path.resolve(appRoot.path, filtered[0]));
+      resolve(path.resolve(appRoot.path, filtered[0]));
     });
   });
 })
-.then(filePath => swaggerParser.parse(filePath));
+.then(filePath => {
+    const yamlContent = yaml.safeLoad(fs.readFileSync(filePath));
+    return parser.createDocument(yamlContent);
+});
