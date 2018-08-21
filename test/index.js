@@ -11,43 +11,49 @@ const appRoot = require('app-root-path');
 
 describe('sis', () => {
 
-  describe('interface testing', () => {
-    before(() => {
-      const command = `${appRoot.path}/bin/sis -i test/swagger.yaml -c test/serverless.common.yml -S sis -o test/src -f -O -B`;
-      childProcess.execSync(command);
-    });
+  const swaggerVersions = [
+      {"name": "Swagger 2.0 (legacy)", "specFile":"test/swagger.yaml", "outDir":"test/src/swagger20"},
+      {"name": "OpenAPI 3.0", "specFile":"test/openapi30.yaml", "outDir":"test/src/openapi30"}
+  ];
 
-    it('Should generate authentication service.', (done) => {
-      fs.readdir(path.resolve(appRoot.path, './test/src/authentication'), (error, results) => {
-        assert.ok(results.some((result) => {
-          return (result === 'serverless.yml');
-        }));
-
-        assert.ok(results.some((result) => {
-          return (result === 'handler.js');
-        }));
-
-        done();
+  swaggerVersions.forEach(swaggerVersion => {
+    describe(`${swaggerVersion.name}: interface testing`, () => {
+      before(() => {
+        const command = `${appRoot.path}/bin/sis -i ${swaggerVersion.specFile} -c test/serverless.common.yml -S sis -o ${swaggerVersion.outDir} -f -O -B`;
+        childProcess.execSync(command);
       });
-    });
 
-    it('Should generate test service.', (done) => {
-      fs.readdir(path.resolve(appRoot.path, './test/src/test'), (error, results) => {
-        assert.ok(results.some((result) => {
-          return (result === 'serverless.yml');
-        }));
+      it('Should generate authentication service.', (done) => {
+        fs.readdir(path.resolve(appRoot.path, `${swaggerVersion.outDir}/authentication`), (error, results) => {
+          assert.ok(results.some((result) => {
+            return (result === 'serverless.yml');
+          }));
 
-        assert.ok(results.some((result) => {
-          return (result === 'handler.js');
-        }));
+          assert.ok(results.some((result) => {
+            return (result === 'handler.js');
+          }));
 
-        done();
+          done();
+        });
       });
-    });
 
-    after(() => {
-      // return del(path.resolve(appRoot.path, './test/src'));
+      it('Should generate test service.', (done) => {
+        fs.readdir(path.resolve(appRoot.path, `${swaggerVersion.outDir}/test`), (error, results) => {
+          assert.ok(results.some((result) => {
+            return (result === 'serverless.yml');
+          }));
+
+          assert.ok(results.some((result) => {
+            return (result === 'handler.js');
+          }));
+
+          done();
+        });
+      });
+
+      after(() => {
+        return del(path.resolve(appRoot.path, swaggerVersion.outDir));
+      });
     });
   });
-
 });
