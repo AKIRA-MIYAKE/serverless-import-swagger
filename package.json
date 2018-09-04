@@ -1,6 +1,6 @@
 {
   "name": "serverless-import-swagger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Import functions from swagger spec filet to serverless.yml",
   "bin": {
     "sis": "./bin/sis"
@@ -19,8 +19,11 @@
     "babel-cli": "^6.18.0",
     "babel-preset-latest": "^6.16.0",
     "del": "^2.2.2",
+    "growl": "^1.10.5",
+    "https-proxy-agent": "^2.2.1",
     "mocha": "^5.2.0",
-    "power-assert": "^1.4.2"
+    "power-assert": "^1.4.2",
+    "url-parse": "^1.4.3"
   },
   "scripts": {
     "build": "babel src --out-dir lib",
