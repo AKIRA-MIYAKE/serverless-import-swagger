@@ -86,6 +86,38 @@ describe('convert-swagger-to-configs', () => {
           assert.equal(converter._extractFunctionName(definition2, option), 'postAnotherMore')
         });
       });
+
+      describe('operation-id', () => {
+        const option = {
+          operationId: true
+        };
+
+        it('should fallback to default name if operationId is not defined', () => {
+          const definition1 = {
+            method: 'get',
+            path: '/foo/bar',
+          };
+          assert.equal(converter._extractFunctionName(definition1, option), 'getFooBar');
+        });
+
+        it('should fallback to default name if operationId in definition is not a string', () => {
+          const definition1 = {
+            method: 'get',
+            path: '/foo/bar',
+            operationId: 42,
+          };
+          assert.equal(converter._extractFunctionName(definition1, option), 'getFooBar');
+        });
+        
+        it('should use operationId in definition as a name', () => {
+          const definition1 = {
+            method: 'get',
+            path: '/foo/bar',
+            operationId: 'myName',
+          };
+          assert.equal(converter._extractFunctionName(definition1, option), 'myName');
+        });
+      });
     });
   });
 });

@@ -87,6 +87,10 @@ const extractServiceName = (definition, options) => {
 const extractFunctionName = (definition, options) => {
   const method = [definition.method];
 
+  if (options.operationId && typeof definition.operationId === 'string') {
+    return definition.operationId;
+  }
+  
   const resources = definition.path
   .split('/')
   .filter(w => (w.length > 0))
