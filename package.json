@@ -25,10 +25,13 @@
     "power-assert": "^1.4.2",
     "url-parse": "^1.4.3"
   },
+  "directories": {
+    "test": "test"
+  },
   "scripts": {
     "build": "babel src --out-dir lib",
     "pretest": "npm run build",
-    "test": "mocha --timeout 5000 ./test/index.js"
+    "test": "mocha --timeout 5000 --recursive"
   },
   "repository": {
     "type": "git",
