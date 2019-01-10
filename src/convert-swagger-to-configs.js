@@ -136,3 +136,4 @@ const mergeConfigs = configs => {
     return merged;
   });
 };
+module.exports._extractFunctionName = extractFunctionName;
