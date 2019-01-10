@@ -87,6 +87,10 @@ const extractServiceName = (definition, options) => {
 const extractFunctionName = (definition, options) => {
   const method = [definition.method];
 
+  if (options.operationId && definition.methodObject && typeof definition.methodObject.operationId === 'string') {
+    return definition.methodObject.operationId;
+  }
+  
   const resources = definition.path
   .split('/')
   .filter(w => (w.length > 0))
@@ -136,3 +140,4 @@ const mergeConfigs = configs => {
     return merged;
   });
 };
+module.exports._extractFunctionName = extractFunctionName;

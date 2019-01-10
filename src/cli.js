@@ -27,6 +27,8 @@ module.exports.exec = () => {
   // CORS and options settings.
   .option('-C, --cors', 'If add this option, added cors setting to all http event.')
   .option('-O, --options-method', 'If add this option, added cors setting to get http event, and added OPTIONS method to api path that including other http method.')
+  // Others
+  .option('--operation-id', 'If this option is added and an API has operationId, the function is named from operationId.')
   .parse(process.argv);
 
   const options = {
@@ -38,6 +40,7 @@ module.exports.exec = () => {
     basePath: (commander.basePath) ? commander.basePath : false,
     force: (commander.force) ? commander.force : false,
     cors: (commander.cors) ? commander.cors : false,
+    operationId: (commander.operationId) ? commander.operationId : false,
     optionsMethod: (commander.optionsMethod) ? commander.optionsMethod : false,
   };
 
