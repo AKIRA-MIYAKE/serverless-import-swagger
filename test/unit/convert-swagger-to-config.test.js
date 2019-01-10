@@ -104,7 +104,9 @@ describe('convert-swagger-to-configs', () => {
           const definition1 = {
             method: 'get',
             path: '/foo/bar',
-            operationId: 42,
+            methodObject: {
+              operationId: 42,
+            }
           };
           assert.equal(converter._extractFunctionName(definition1, option), 'getFooBar');
         });
@@ -113,7 +115,9 @@ describe('convert-swagger-to-configs', () => {
           const definition1 = {
             method: 'get',
             path: '/foo/bar',
-            operationId: 'myName',
+            methodObject: {
+              operationId: 'myName',
+            }
           };
           assert.equal(converter._extractFunctionName(definition1, option), 'myName');
         });

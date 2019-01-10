@@ -87,8 +87,8 @@ const extractServiceName = (definition, options) => {
 const extractFunctionName = (definition, options) => {
   const method = [definition.method];
 
-  if (options.operationId && typeof definition.operationId === 'string') {
-    return definition.operationId;
+  if (options.operationId && definition.methodObject && typeof definition.methodObject.operationId === 'string') {
+    return definition.methodObject.operationId;
   }
   
   const resources = definition.path
