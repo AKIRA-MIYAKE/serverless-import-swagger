@@ -1,0 +1,11 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: Serverless Import Swagger
+  description: Test Swagger Spec
+paths:
+  /test/{testId}/users:
+    get:
+      operationId: myName
+      tags:
+        - sls-test

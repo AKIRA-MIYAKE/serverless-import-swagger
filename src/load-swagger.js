@@ -10,8 +10,10 @@ const parser = new openapiParser.OasLibraryUtils();
 
 module.exports = options => Promise.resolve()
 .then(() => {
-  if (options.input.length > 0) {
-    return options.input;
+  const inputs = options.input.filter(path => path.length > 0);
+
+  if (inputs.length > 0) {
+    return inputs;
   }
 
   return new Promise((resolve, reject) => {
@@ -23,16 +25,18 @@ module.exports = options => Promise.resolve()
 
       const filtered = results.filter(r => /^swagger.ya?ml$/.test(r));
 
-      if (filterd.length === 0) {
+      if (filtered.length === 0) {
         reject('Cannot found swagger file.');
         return;
       }
 
-      resolve(path.resolve(appRoot.path, filtered[0]));
+      resolve([path.resolve(appRoot.path, filtered[0])]);
     });
   });
 })
-.then(filePath => {
+.then(filePaths => {
+  return filePaths.map(filePath => {
     const yamlContent = yaml.safeLoad(fs.readFileSync(filePath));
     return parser.createDocument(yamlContent);
+  });
 });
