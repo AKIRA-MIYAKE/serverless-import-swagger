@@ -14,11 +14,6 @@ describe('multiple swagger yamls', () => {
   const basedir = 'test/integration/merge';
   const swaggerVersions = [
       {
-        'name': 'Swagger 2.0 (legacy)',
-        'specFiles': [`${basedir}/swagger.part1.yaml`, `${basedir}/swagger.part2.yaml`],
-        'outDir': `${basedir}/src/swagger20}`
-      },
-      {
         'name': 'OpenAPI 3.0',
         'specFiles': [`${basedir}/openapi30.part1.yaml`, `${basedir}/openapi30.part2.yaml`],
         'outDir':`${basedir}/src/openapi30`
