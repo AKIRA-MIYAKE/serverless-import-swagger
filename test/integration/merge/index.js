@@ -25,7 +25,8 @@ describe('multiple swagger yamls', () => {
       let serviceDir;
 
       before(() => {
-        const command = `${appRoot.path}/bin/sis --operation-id -i ${swaggerVersion.specFiles.join(',')} -c ${basedir}/serverless.common.yml -o ${swaggerVersion.outDir} -f`;
+        const paths = swaggerVersion.specFiles.map(p => `-i ${p}`).join(' ');
+        const command = `${appRoot.path}/bin/sis --operation-id ${paths} -c ${basedir}/serverless.common.yml -o ${swaggerVersion.outDir} -f`;
         childProcess.execSync(command);
         serviceDir = path.resolve(appRoot.path, `${swaggerVersion.outDir}/test`);
       });
