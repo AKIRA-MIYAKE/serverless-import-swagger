@@ -1,6 +1,8 @@
 # serverless-import-swagger
 Import functions from swagger spec filet to serverless.yml of [Serverless Framework](https://serverless.com/)  
 
+[![Build Status](https://travis-ci.com/AKIRA-MIYAKE/serverless-import-swagger.svg?branch=master)](https://travis-ci.com/AKIRA-MIYAKE/serverless-import-swagger)
+
 # Install
 
 ```
