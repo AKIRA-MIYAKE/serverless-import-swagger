@@ -26,7 +26,8 @@ Usage: sis [options]
     -V, --version                  output the version number
 
     # Common options.
-    -i, --input <path>             Specify swagger file path. (defailt "./swagger.ya?ml")
+    -i, --input [path]             Specify swagger file path(s). (default "./swagger.ya?ml")
+                                   It multiple paths given like `-i foo/swagger.yml -i bar/swagger.ymls, merged result is produced.
     -c, --common <path>            Specify common config of serverless file path. (default "./serverless.common.ya?ml")
     -o, --out-dir <path>           Specify dist directory of services. (default "./")
     -f, --force                    If add this option, overwriten serverless.yml by generated definitinos.

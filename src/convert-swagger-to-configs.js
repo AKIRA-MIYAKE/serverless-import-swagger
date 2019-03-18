@@ -8,30 +8,32 @@ module.exports = (swagger, options) => mergeConfigs(
   .map(definition => definitionToConfig(definition, options))
 );
 
-const swaggerToDefinitions = (swagger, options) => {
+const swaggerToDefinitions = (swaggers, options) => {
   const definitions = [];
 
-  swagger.paths.getItems().forEach(pathItem => {
-    const path = pathItem.path();
-    const methodNames = Object.keys(pathItem).filter(k => !k.startsWith("_"));
-    methodNames.forEach(method => {
-      definitions.push({
-        path: path,
-        method: method.toLowerCase(),
-        methodObject: pathItem[method]
-      });
-    });
-
-    if (options.optionsMethod) {
-      const filtered = methodNames.filter(method => (method.toLowerCase() !== 'get'));
-      if (filtered.length > 0) {
+  swaggers.forEach(swagger => {
+    swagger.paths.getItems().forEach(pathItem => {
+      const path = pathItem.path();
+      const methodNames = Object.keys(pathItem).filter(k => !k.startsWith("_"));
+      methodNames.forEach(method => {
         definitions.push({
           path: path,
-          method: 'options',
-          methodObject: pathItem[filtered[0]]
+          method: method.toLowerCase(),
+          methodObject: pathItem[method]
         });
+      });
+
+      if (options.optionsMethod) {
+        const filtered = methodNames.filter(method => (method.toLowerCase() !== 'get'));
+        if (filtered.length > 0) {
+          definitions.push({
+            path: path,
+            method: 'options',
+            methodObject: pathItem[filtered[0]]
+          });
+        }
       }
-    }
+    });
   });
 
   return definitions;
@@ -90,7 +92,7 @@ const extractFunctionName = (definition, options) => {
   if (options.operationId && definition.methodObject && typeof definition.methodObject.operationId === 'string') {
     return definition.methodObject.operationId;
   }
-  
+
   const resources = definition.path
   .split('/')
   .filter(w => (w.length > 0))

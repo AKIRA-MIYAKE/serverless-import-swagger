@@ -10,12 +10,18 @@ const loadCommonConfig = require('./load-common-config');
 const mergeConfigs = require('./merge-configs');
 const wrilteFile = require('./write-file');
 
+
+function items(val, accum) {
+  accum.push(val);
+  return accum;
+}
+
 module.exports.exec = () => {
   commander
   .version('0.0.15')
   .description('Import functions from swagger spec filet to serverless.yml')
   // Common options.
-  .option('-i, --input <path>', 'Specify swagger file path. (defailt "./swagger.ya?ml")')
+  .option('-i, --input [path]', 'Specify swagger file path. (defailt "./swagger.ya?ml")', items, [])
   .option('-c, --common <path>', 'Specify common config of serverless file path. (default "./serverless.common.ya?ml")')
   .option('-o, --out-dir <path>', 'Specify dist directory of services. (default "./")')
   .option('-f, --force', 'If add this option, overwriten serverless.yml by generated definitinos.')
@@ -32,7 +38,7 @@ module.exports.exec = () => {
   .parse(process.argv);
 
   const options = {
-    input: (commander.input) ? commander.input : 'swagger.yaml',
+    input: (Array.isArray(commander.input) && commander.input.length > 0) ? commander.input : ['swagger.yaml'],
     common: (commander.common) ? commander.common : './serverless.common.yml',
     outDir: (commander.outDir) ? commander.outDir : './',
     apiPrefix: (commander.apiPrefix) ? commander.apiPrefix : 'sls',
