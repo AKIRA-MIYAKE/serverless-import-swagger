@@ -1,38 +1,18 @@
 {
   "name": "serverless-import-swagger",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "Import functions from swagger spec filet to serverless.yml",
   "bin": {
     "sis": "./bin/sis"
   },
-  "dependencies": {
-    "app-root-path": "^2.1.0",
-    "change-case": "^3.1.0",
-    "commander": "^2.19.0",
-    "deepmerge": "^1.3.2",
-    "graceful-fs": "^4.1.15",
-    "js-yaml": "^3.12.2",
-    "lodash": "^4.17.11",
-    "oai-ts-core": "^0.2.36",
-    "serverless": "^1.39.0"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-preset-latest": "^6.16.0",
-    "del": "^2.2.2",
-    "growl": "^1.10.5",
-    "https-proxy-agent": "^2.2.1",
-    "mocha": "^5.2.0",
-    "power-assert": "^1.6.1",
-    "url-parse": "^1.4.4"
-  },
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "build": "babel src --out-dir lib",
-    "pretest": "npm run build",
-    "test": "mocha --timeout 5000 --recursive"
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "npm run type-check -- --watch",
+    "lint": "eslint src/**/*.ts --fix",
+    "build": "del ./lib && npm run build:js",
+    "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
   },
   "repository": {
     "type": "git",
@@ -44,5 +24,43 @@
   "bugs": {
     "url": "https://github.com/AKIRA-MIYAKE/serverless-import-swagger/issues"
   },
-  "homepage": "https://github.com/AKIRA-MIYAKE/serverless-import-swagger#readme"
+  "homepage": "https://github.com/AKIRA-MIYAKE/serverless-import-swagger#readme",
+  "dependencies": {
+    "apicurio-data-models": "^1.0.4",
+    "app-root-path": "^2.2.1",
+    "change-case": "^3.1.0",
+    "commander": "^2.20.0",
+    "graceful-fs": "^4.2.0",
+    "js-yaml": "^3.13.1",
+    "lodash": "^4.17.11"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/app-root-path": "^1.2.4",
+    "@types/commander": "^2.12.2",
+    "@types/graceful-fs": "^4.1.3",
+    "@types/jest": "^24.0.15",
+    "@types/js-yaml": "^3.12.1",
+    "@types/lodash": "^4.14.135",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "@typescript-eslint/parser": "^1.11.0",
+    "acorn-jsx": "^5.0.1",
+    "del": "^5.0.0",
+    "del-cli": "^2.0.0",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "jest": "^24.8.0",
+    "prettier": "^1.18.2",
+    "serverless": "^1.46.1",
+    "typescript": "^3.5.2"
+  },
+  "peerDependencies": {
+    "serverless": "^1.46.1"
+  }
 }
