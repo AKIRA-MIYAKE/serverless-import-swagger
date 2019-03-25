@@ -124,4 +124,24 @@ describe('convert-swagger-to-configs', () => {
       });
     });
   });
+
+  describe('definitionToConfig', () => {
+    describe('authorizer-arn', () => {
+      it('should add authorizer arn to generated function', () => {
+        const definition = {
+          method: 'get',
+          path: '/foo/bar',
+          methodObject: {
+            tags: ["sls-api"]
+          }
+        }
+        const option = {
+          apiPrefix: "sls",
+          authorizer: "arn:aws:lambda:*:*:function:fake-authorizer"
+        }
+        let config = converter._definitionToConfig(definition, option)
+        assert.equal(config.functions.getFooBar.events[0].http.authorizer, 'arn:aws:lambda:*:*:function:fake-authorizer')
+      });
+    });
+  });
 });

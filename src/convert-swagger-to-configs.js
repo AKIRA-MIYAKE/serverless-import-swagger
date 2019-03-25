@@ -72,6 +72,10 @@ const definitionToConfig = (definition, options) => {
     httpEvent.http['cors'] = true;
   }
 
+  if (options.authorizer) {
+    httpEvent.http['authorizer'] = options.authorizer;
+  }
+
   const events = [httpEvent];
   const functions = {};
   functions[functionName] = { handler, events };
@@ -143,3 +147,4 @@ const mergeConfigs = configs => {
   });
 };
 module.exports._extractFunctionName = extractFunctionName;
+module.exports._definitionToConfig = definitionToConfig;
