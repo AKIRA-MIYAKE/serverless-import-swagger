@@ -1,0 +1,7 @@
+{
+  "basePath": { "servicePrefix": "api" },
+  "options": {
+    "cors": true,
+    "operationId": true
+  }
+}

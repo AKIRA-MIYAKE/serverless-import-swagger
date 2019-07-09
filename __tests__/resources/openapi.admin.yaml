@@ -1,0 +1,9 @@
+openapi: 3.0.1
+x-sis-config:
+  options:
+    cors: true
+    authorizer: handler.authorizer
+paths:
+  /admin/users:
+    get:
+      operationId: adminUsers
