@@ -14,18 +14,18 @@ import writeServices from './functions/write-services';
 
 commander
   .version('0.2.0')
-  .description('Import functions from swagger spec filet to serverless.yml')
+  .description('Import functions from OpenAPI spec file to serverless.yml')
   .option(
     '-C, --config <path>',
     'Specify config file path. (defailt "./sis.config.json")'
   )
   .option(
-    '-s, --service-name <strinng>',
+    '-s, --service-name <string>',
     'Specify service name. (default "service")'
   )
   .option(
     '-i, --input [path]',
-    'Specify swagger file path. (defailt "./swagger.ya?ml")',
+    'Specify OpenAPI file path. (defailt "./openapi.ya?ml")',
     (item, acc) => (!acc ? [item] : [...acc, item]),
     undefined
   )

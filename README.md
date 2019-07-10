@@ -1,58 +1,81 @@
 # serverless-import-swagger
-Import functions from swagger spec filet to serverless.yml of [Serverless Framework](https://serverless.com/)  
+Import functions from OpenAPI spec file to serverless.yml of [Serverless Framework](https://serverless.com/)  
 
 [![Build Status](https://travis-ci.com/AKIRA-MIYAKE/serverless-import-swagger.svg?branch=master)](https://travis-ci.com/AKIRA-MIYAKE/serverless-import-swagger)
+
+# Note
+
+In v0.2, there are breaking changes.  
+Please be careful when upgrading.  
 
 # Install
 
 ```
-$ npm install serverless-import-swagger
+$ npm install -g serverless-import-swagger
 ```
 
-# Add tag to Operation Object in swagger.yaml
-Add `sls-{service-name}` tag to the operation that targeted by serverless.  
-Default prefix is "sls". If you want to use other prefix, call sls command with `-A` option.  
-
 # Usage
-Set `swagger.yaml` file on applicaion root directory.  
-If you want to apply common configs to serverless.yml, set `serverless.common.yml` file on application root directory.   
+## Quick start
+Add a file named `openapi.yaml` on application root directory.  
+Then, run following command and serverless-import-swagger generate service of Serverless Framework.  
 
+```
+$ sis
+```
+
+## Command option.
 ```
 Usage: sis [options]
 
-  Import functions from swagger spec filet to serverless.yml
+Import functions from OpenAPI spec filet to serverless.yml
 
-  Options:
-
-    -h, --help                     output usage information
-    -V, --version                  output the version number
-
-    # Common options.
-    -i, --input [path]             Specify swagger file path(s). (default "./swagger.ya?ml")
-                                   It multiple paths given like `-i foo/swagger.yml -i bar/swagger.ymls, merged result is produced.
-    -c, --common <path>            Specify common config of serverless file path. (default "./serverless.common.ya?ml")
-    -o, --out-dir <path>           Specify dist directory of services. (default "./")
-    -f, --force                    If add this option, overwriten serverless.yml by generated definitinos.
-
-    # Services and tags prefix options.
-    -A, --api-prefix <prefix>      Specify target prefix for swagger tags. (default "sls")
-    -S, --service-prefix <prefix>  Specify prefix that added service name. (default none)
-
-    # Base path mode that spliting large api specification settings.
-    -B, --base-path                If add this option, run in a mode of dividing a service by a api base path.
-
-    # CORS and OPTIONS method settings.
-    -C, --cors                     If add this option, added cors setting to all http event.
-    -O, --options-method           If add this option, added cors setting to get http event, and added OPTIONS method to api path that including other http method.
-
-    # Other settings.
-    --operation-id                 If this option is added and an API has operationId, the function is named from operationId.
+Options:
+  -V, --version                 output the version number
+  -C, --config <path>           Specify config file path. (defailt "./sis.config.json")
+  -s, --service-name <string>  Specify service name. (default "service")
+  -i, --input [path]            Specify OpenAPI file path. (defailt "./openapi.ya?ml")
+  -o, --out-dir <path>          Specify dist directory of services. (default "./")
+  -c, --common <path>           Specify common config of serverless file path. (default "./serverless.common.ya?ml")
+  -f, --force                   If add this option, overwriten serverless.yml by generated definitinos.
+  -h, --help                    output usage information
 ```
 
 Example
 ```
 $ sis -i /path/to/swagger.yml -c /path/to/serverless.common.yml -o ./src
 ```
+
+## `sis.config.json`
+You can set options using a configuration file. By default, `sis.config.json` will be applied automatically if it exists.  
+
+```
+{
+  "all": <boolean>, // Specify whether to target all of the document. (default true)
+  "serviceName": <string>, // Specify service name. (default "service")
+  "basePath": <boolean | { "servicePrefix": <string> }>, // Specify base path mode enabled. (defualt false)
+  "input": <string[] | null>, // Specify OpenAPI file path. (defailt "./openapi.ya?ml")
+  "outDir": <string | null>, // Specify dist directory of services. (default "./")
+  "common": <string | null>, // Specify common config of serverless file path. (default "./serverless.common.ya?ml")
+  "force": <boolean>, // Specify overwrite enabled. (default false)
+  "options": {
+    "cors": <boolean | any>, // Specify the addition of cors setting. Accept the format of the Serverless Framework's cors settings. (default false) 
+    "optionsMethod": <boolean>, // Specify addition of options method for the path. (default false)
+    "authorizer": <string | null>, // Specify AWS_IAM authorizers or custom authorizers. (default null)
+    "operationId": <boolean> // Specify use of operationId in function name. (default false)
+  }
+}
+```
+The default values ​​apply to items not set.  
+
+## Base path mode
+Due to the limitations of CloudFormation, it is not possible to create a service with a large number of endpoints.   
+The base path mode splits services based on the top level path.  
+If base path mode is set to true, the top level path will be the service name. If you specify servicePrefix, a prefix can be added before the service name.  
+
+## `x-sis-config`
+You can use the extension of `x-sis-config` to write config in the spec file.  
+The config at the top level apply to the entire file, and the config at operation parameters apply only to that function.  
+If you disable `all` in config, only operations for which x-sis-config is set are imported. 
 
 # Caution
 Serverless depends on constraints of amazon web service.  
