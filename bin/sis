@@ -2,5 +2,4 @@
 
 'use strict';
 
-const cli = require('../lib/cli');
-cli.exec();
+require('../lib/cli');

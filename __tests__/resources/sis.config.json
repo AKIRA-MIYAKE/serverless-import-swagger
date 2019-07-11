@@ -1,0 +1,8 @@
+{
+  "all": true,
+  "serviceName": "api",
+  "options": {
+    "cors": true,
+    "operationId": true
+  }
+}
