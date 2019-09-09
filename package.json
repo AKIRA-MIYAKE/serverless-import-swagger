@@ -1,6 +1,6 @@
 {
   "name": "serverless-import-swagger",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Import functions from OpenAPI spec filet to serverless.yml",
   "bin": {
     "sis": "./bin/sis"
